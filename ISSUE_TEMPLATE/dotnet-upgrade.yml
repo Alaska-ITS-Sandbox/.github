@@ -1,0 +1,114 @@
+name: .NET Upgrade Request
+description: "Copilot agent upgrades THIS repo (Framework/Core/Modern) per selected upgrade type, runs build/tests, and opens a PR requesting review."
+title: "[.NET Upgrade] "
+labels: ["dotnet-upgrade"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## .NET Upgrade Request (Agent-Run)
+
+        The agent will scan this repo, apply the requested upgrade strategy, run build/tests, and open a PR requesting review.
+        If required info is missing or build/tests fail → the agent comments details here and stops (no PR).
+
+  - type: input
+    id: reviewer
+    attributes:
+      label: PR reviewer (GitHub username)
+      placeholder: "@codeowner"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: upgrade-type
+    attributes:
+      label: Upgrade type
+      description: Choose how the agent should handle older frameworks.
+      options:
+        - "AUTO (agent decides safest path)"
+        - "Modern .NET retarget (net6+ → net8/net10)"
+        - ".NET Framework in-place retarget (net4x → net48)"
+        - ".NET Framework → Modern .NET migration (net4x → net8/net10)"
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: target-version
+    attributes:
+      label: Target version
+      description: AUTO prefers latest even/LTS available (net10, fallback net8). For Framework in-place, agent uses net48 unless specified in instructions.
+      options:
+        - "AUTO (latest even/LTS for modern .NET; net48 for Framework in-place)"
+        - "net10.0 (LTS)"
+        - "net8.0 (LTS)"
+        - "net48 (.NET Framework)"
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Upgrade scope
+      options:
+        - "All projects"
+        - "Main projects only (exclude tests where practical)"
+        - "Specific projects (list below)"
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: specific-projects
+    attributes:
+      label: Specific projects (only if Scope=Specific)
+      description: One path per line (.csproj/.vbproj/.fsproj/.sln).
+      placeholder: |
+        src/MyApp/MyApp.csproj
+        src/MySolution.sln
+    validations:
+      required: false
+
+  - type: input
+    id: build-command
+    attributes:
+      label: Build command
+      description: Command that must succeed before PR is created.
+      value: "dotnet build -c Release"
+    validations:
+      required: true
+
+  - type: input
+    id: test-command
+    attributes:
+      label: Test command
+      description: If repo has no tests, set to SKIP and explain why in Special instructions.
+      value: "dotnet test -c Release"
+    validations:
+      required: true
+
+  - type: textarea
+    id: special-instructions
+    attributes:
+      label: Special instructions / constraints (optional)
+      placeholder: |
+        - Keep Newtonsoft.Json
+        - Don't update xunit beyond 2.5.x
+        - If Framework migration is too large, stop and comment recommended phased plan
+        - Private NuGet feed details (if any)
+
+  - type: checkboxes
+    id: acknowledgements
+    attributes:
+      label: Acknowledgements
+      options:
+        - label: "If required info is missing or invalid, agent will comment and stop (no PR)."
+          required: true
+        - label: "If build/tests fail, agent will comment and stop (no PR)."
+          required: true
+        - label: "No new tests will be created; existing tests only."
+          required: true
+        - label: "PR will not be auto-merged."
+          required: true
