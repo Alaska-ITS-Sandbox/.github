@@ -1,0 +1,27 @@
+name: copilot-setup-steps
+
+on:
+  workflow_dispatch:
+
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up .NET 10 SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.x'
+
+      - name: Verify dotnet
+        run: |
+          dotnet --info
+
+      - name: Ensure dnx exists (for MCP server command)
+        shell: bash
+        run: |
+          set -e
+          if ! command -v dnx >/dev/null 2>&1; then
+            dotnet tool install -g dnx
+            echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+          fi
+          dnx --help >/dev/null
