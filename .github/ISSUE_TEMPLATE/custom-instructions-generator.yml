@@ -24,11 +24,11 @@ body:
            CRITICAL: code-review.instructions.md MUST begin with this exact YAML frontmatter block (all three fields are REQUIRED — do NOT omit any):
            ---
            description: '<repo-specific description — derive from the repo name, purpose, and tech stack. NOT a generic description.>'
-           applyTo: '**'
            excludeAgent: ["coding-agent"]
+           applyTo: '**'
            ---
+           - The excludeAgent field with value ["coding-agent"] is the MOST IMPORTANT field. Without it, coding-agent will incorrectly use these review instructions. Never omit this field.
            - The description field must be specific to THIS repository. Do not use generic text.
-           - The excludeAgent field with value ["coding-agent"] is MANDATORY. Without it, coding-agent will incorrectly use these review instructions. Never omit this field.
         4. Self-review the generated files for accuracy, completeness, and consistency.
         5. Refine as necessary based on the self-review.
         6. Open a PR requesting the designated reviewer (if provided) or CODEOWNERS.
@@ -72,10 +72,10 @@ body:
         REQUIRED: The file MUST begin with this exact YAML frontmatter (all 3 fields mandatory, do not omit any):
         ---
         description: '<repo-specific description derived from repo name, purpose, and tech stack>'
-        applyTo: '**'
         excludeAgent: ["coding-agent"]
+        applyTo: '**'
         ---
-        DO NOT omit excludeAgent — it prevents coding-agent from using these review-only instructions.
+        DO NOT omit excludeAgent — it is the most critical field. It prevents coding-agent from using these review-only instructions.
 
         Then include these sections:
         - Review Philosophy & Principles
@@ -101,3 +101,13 @@ body:
         - Enforce PascalCase for component names
         - We use Conventional Commits
         - Skip the security section — handled by a separate policy
+
+  - type: checkboxes
+    id: acknowledgements
+    attributes:
+      label: Pre-flight checklist
+      options:
+        - label: I have reviewed the sections above and they reflect what I want generated.
+          required: true
+        - label: I understand the agent will open a PR for review — nothing merges automatically.
+          required: true
