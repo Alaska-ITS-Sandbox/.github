@@ -1,0 +1,128 @@
+name: Custom Instructions Generator
+description: "Copilot agent scans this repo, generates or updates copilot-instructions.md and code-review instructions, reviews the output, and opens a PR requesting review."
+title: "[Instruction Generator] "
+labels: ["copilot-instructions"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Custom Instructions Generator (Agent-Run)
+
+        The agent will:
+        1. **Scan** this repo to understand its structure, technology stack, conventions, and patterns.
+        2. **Generate or update** `.github/copilot-instructions.md` with discovered project metadata.
+        3. **Generate or update** `.github/instructions/code-review.instructions.md` with code-review guidance.
+        4. **Self-review** the generated files for accuracy, completeness, and consistency.
+        5. **Refine** as necessary based on the self-review.
+        6. **Open a PR** requesting the designated reviewer.
+        7. The PR will be linked to this issue so it **auto-closes on merge**.
+
+        If required info is missing or the agent cannot confidently determine repo conventions, it will comment details here and stop (no PR).
+
+  - type: input
+    id: reviewer
+    attributes:
+      label: PR reviewer (GitHub username)
+      placeholder: "@codeowner"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: operation-mode
+    attributes:
+      label: Operation mode
+      description: Choose whether to create new instruction files or update existing ones.
+      options:
+        - "AUTO (create if missing, update if existing)"
+        - "Create only (fail if files already exist)"
+        - "Update only (fail if files do not exist)"
+      default: 0
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: instruction-scope
+    attributes:
+      label: Files to generate / update
+      description: Select which instruction files the agent should produce.
+      options:
+        - label: "`.github/copilot-instructions.md` — project-wide Copilot coding instructions"
+          required: true
+        - label: "`.github/instructions/code-review.instructions.md` — code-review-specific instructions"
+          required: false
+
+  - type: dropdown
+    id: scan-depth
+    attributes:
+      label: Scan depth
+      description: How thoroughly the agent should analyze the repo before generating instructions.
+      options:
+        - "Standard (project root, config files, top-level source folders)"
+        - "Deep (all source files, dependencies, CI/CD pipelines, documentation)"
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: copilot-instructions-sections
+    attributes:
+      label: "Sections to include in copilot-instructions.md"
+      description: |
+        Select or customize the sections the agent should produce in copilot-instructions.md.
+        Remove or add lines as needed. The agent will populate each section based on repo analysis.
+      value: |
+        - Project Overview & Structure
+        - Technology Stack & Preferred Libraries
+        - Coding Style & Naming Conventions
+        - Architectural Patterns (to follow or avoid)
+        - Security Requirements & Error Handling
+        - Documentation Standards
+    validations:
+      required: true
+
+  - type: textarea
+    id: code-review-sections
+    attributes:
+      label: "Sections to include in code-review.instructions.md"
+      description: |
+        Select or customize the sections for the code-review instruction file.
+        The file will include `applyTo: '**'` and `excludeAgent: ["coding-agent"]` in its frontmatter.
+      value: |
+        - Review Philosophy & Principles
+        - Primary Review Priorities (ordered)
+        - Language / Framework-Specific Guidance
+        - What NOT to Flag (linter/formatter territory)
+        - Comment Style & Tone (prefix, length, confidence threshold)
+        - Example Comments (good and bad)
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context or constraints (optional)
+      description: |
+        Provide any extra instructions the agent should follow, such as:
+        - Specific conventions to enforce or avoid
+        - Team preferences for naming, imports, or patterns
+        - Sections to skip or emphasize
+        - Links to external style guides
+      placeholder: |
+        - Enforce PascalCase for component names
+        - We use Conventional Commits
+        - Skip the security section — handled by a separate policy
+
+  - type: checkboxes
+    id: acknowledgements
+    attributes:
+      label: Acknowledgements
+      options:
+        - label: "If required info is missing or the repo cannot be analyzed, the agent will comment and stop (no PR)."
+          required: true
+        - label: "The agent will self-review generated content before opening a PR."
+          required: true
+        - label: "Existing instruction files may be overwritten when operation mode is AUTO or Update only."
+          required: true
+        - label: "PR will not be auto-merged; reviewer approval is required."
+          required: true
