@@ -49,17 +49,6 @@ body:
     validations:
       required: true
 
-  - type: input
-    id: code-review-description
-    attributes:
-      label: "Frontmatter description for code-review.instructions.md"
-      description: |
-        This value will appear in the YAML frontmatter `description` field at the top of the file.
-        The file will always include `applyTo: '**'` and `excludeAgent: ["coding-agent"]`.
-      placeholder: "Code review guidelines for this repository"
-    validations:
-      required: true
-
   - type: textarea
     id: code-review-sections
     attributes:
@@ -69,11 +58,12 @@ body:
         The generated file will start with this YAML frontmatter block:
         ```
         ---
-        description: '<your description from above>'
+        description: '<agent-generated description based on repo analysis>'
         applyTo: '**'
         excludeAgent: ["coding-agent"]
         ---
         ```
+        The agent will auto-generate a suitable `description` based on the repository.
       value: |
         - Review Philosophy & Principles
         - Primary Review Priorities (ordered)
