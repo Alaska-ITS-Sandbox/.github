@@ -9,28 +9,32 @@ body:
     attributes:
       value: |
         ## Custom Instructions Generator (Agent-Run)
+        Submit this form and the assigned agent will scan the repo, generate instruction files, and open a PR.
 
-        The agent will:
-        1. **Deep-scan** this repo (all source files, dependencies, CI/CD pipelines, documentation) to understand its structure, technology stack, conventions, and patterns.
-        2. **Generate or update** `.github/copilot-instructions.md` with discovered project metadata.
-        3. **Generate or update** `.github/instructions/code-review.instructions.md` with code-review guidance.
-           - **IMPORTANT:** The file MUST begin with YAML frontmatter containing a repo-specific `description`, `applyTo: '**'`, and `excludeAgent: ["coding-agent"]`. Example:
-             ```
-             ---
-             description: 'Code review instructions for <repo-name> — <brief repo-specific summary>'
-             applyTo: '**'
-             excludeAgent: ["coding-agent"]
-             ---
-             ```
-           - The `description` must be specific to THIS repository (not generic). Derive it from the repo name, purpose, and tech stack.
-        4. **Self-review** the generated files for accuracy, completeness, and consistency.
-        5. **Refine** as necessary based on the self-review.
-        6. **Open a PR** requesting the designated reviewer (if provided) or CODEOWNERS.
-        7. The PR will be linked to this issue so it **auto-closes on merge**.
-
-        **Mode:** Automatically creates the instruction files if missing, or updates them if they already exist.
-
-        If required info is missing or the agent cannot confidently determine repo conventions, it will comment details here and stop (no PR).
+  - type: textarea
+    id: agent-instructions
+    attributes:
+      label: "Agent Instructions"
+      description: |
+        These are the instructions the agent will follow. You should not need to modify them.
+      value: |
+        1. Deep-scan this repo (all source files, dependencies, CI/CD pipelines, documentation) to understand its structure, technology stack, conventions, and patterns.
+        2. Generate or update `.github/copilot-instructions.md` with the sections listed below.
+        3. Generate or update `.github/instructions/code-review.instructions.md` with the sections listed below.
+           CRITICAL: code-review.instructions.md MUST begin with this exact YAML frontmatter format:
+           ---
+           description: '<repo-specific description — derive from the repo name, purpose, and tech stack. NOT a generic description.>'
+           applyTo: '**'
+           excludeAgent: ["coding-agent"]
+           ---
+           The description field must be specific to THIS repository. Do not use generic text like "Code review instructions that can be customized for any project".
+        4. Self-review the generated files for accuracy, completeness, and consistency.
+        5. Refine as necessary based on the self-review.
+        6. Open a PR requesting the designated reviewer (if provided) or CODEOWNERS.
+        7. Link the PR to this issue so it auto-closes on merge.
+        8. If required info is missing or the repo cannot be analyzed, comment on this issue and stop (no PR).
+    validations:
+      required: true
 
   - type: input
     id: reviewer
@@ -62,18 +66,7 @@ body:
     id: code-review-sections
     attributes:
       label: "Sections to include in code-review.instructions.md"
-      description: |
-        Select or customize the sections for the code-review instruction file.
-
-        **REQUIRED:** The generated file MUST start with YAML frontmatter. The agent will write:
-        ```
-        ---
-        description: '<repo-specific description derived from scanning this repo>'
-        applyTo: '**'
-        excludeAgent: ["coding-agent"]
-        ---
-        ```
-        The `description` must describe THIS specific repository — not be generic. Derive it from the repo name, tech stack, and purpose.
+      description: "Customize the sections below. The frontmatter requirement is in the Agent Instructions above."
       value: |
         - Review Philosophy & Principles
         - Primary Review Priorities (ordered)
@@ -98,17 +91,3 @@ body:
         - Enforce PascalCase for component names
         - We use Conventional Commits
         - Skip the security section — handled by a separate policy
-
-  - type: checkboxes
-    id: acknowledgements
-    attributes:
-      label: Acknowledgements
-      options:
-        - label: "If required info is missing or the repo cannot be analyzed, the agent will comment and stop (no PR)."
-          required: true
-        - label: "The agent will self-review generated content before opening a PR."
-          required: true
-        - label: "Existing instruction files may be overwritten (the agent auto-creates or updates as needed)."
-          required: true
-        - label: "PR will not be auto-merged; reviewer approval is required."
-          required: true
