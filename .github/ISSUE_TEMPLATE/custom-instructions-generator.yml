@@ -68,6 +68,14 @@ body:
       label: "Sections to include in code-review.instructions.md"
       description: "Customize the sections below. The frontmatter requirement is in the Agent Instructions above."
       value: |
+        The file MUST begin with YAML frontmatter:
+        ---
+        description: '<repo-specific description derived from repo name, purpose, and tech stack>'
+        applyTo: '**'
+        excludeAgent: ["coding-agent"]
+        ---
+
+        Then include these sections:
         - Review Philosophy & Principles
         - Primary Review Priorities (ordered)
         - Language / Framework-Specific Guidance
