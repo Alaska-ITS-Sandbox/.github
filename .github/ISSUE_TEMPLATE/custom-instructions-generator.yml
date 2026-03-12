@@ -21,13 +21,12 @@ body:
         1. Deep-scan this repo (all source files, dependencies, CI/CD pipelines, documentation) to understand its structure, technology stack, conventions, and patterns.
         2. Generate or update `.github/copilot-instructions.md` with the sections listed below.
         3. Generate or update `.github/instructions/code-review.instructions.md` with the sections listed below.
-           CRITICAL: code-review.instructions.md MUST begin with this exact YAML frontmatter block (all three fields are REQUIRED — do NOT omit any):
+           CRITICAL: code-review.instructions.md MUST begin with this exact YAML frontmatter block (both fields are REQUIRED):
            ---
-           description: '<repo-specific description — derive from the repo name, purpose, and tech stack. NOT a generic description.>'
+           description: '<repo-specific description — derive from the repo name, purpose, and tech stack>'
            excludeAgent: ["coding-agent"]
-           applyTo: '**'
            ---
-           - The excludeAgent field with value ["coding-agent"] is the MOST IMPORTANT field. Without it, coding-agent will incorrectly use these review instructions. Never omit this field.
+           - The excludeAgent field is the MOST IMPORTANT field. Without it, coding-agent will incorrectly use these review instructions. Never omit this field.
            - The description field must be specific to THIS repository. Do not use generic text.
         4. Self-review the generated files for accuracy, completeness, and consistency.
         5. Refine as necessary based on the self-review.
@@ -69,11 +68,10 @@ body:
       label: "Sections to include in code-review.instructions.md"
       description: "Customize the sections below. The frontmatter requirement is in the Agent Instructions above."
       value: |
-        REQUIRED: The file MUST begin with this exact YAML frontmatter (all 3 fields mandatory, do not omit any):
+        REQUIRED: The file MUST begin with this exact YAML frontmatter (both fields mandatory):
         ---
         description: '<repo-specific description derived from repo name, purpose, and tech stack>'
         excludeAgent: ["coding-agent"]
-        applyTo: '**'
         ---
         DO NOT omit excludeAgent — it is the most critical field. It prevents coding-agent from using these review-only instructions.
 
