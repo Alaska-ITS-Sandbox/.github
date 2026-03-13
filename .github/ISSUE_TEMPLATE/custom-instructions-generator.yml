@@ -11,12 +11,12 @@ body:
         ## Custom Instructions Generator (Agent-Run)
         Submit this form and the assigned agent will scan the repo, generate instruction files, and open a PR.
 
-  - type: markdown
+  - type: textarea
     id: agent-instructions
     attributes:
-      label: "Agent Instructions"
+      label: "Agent Instructions (DO NOT EDIT)"
       description: |
-        These are the instructions the agent will follow. You should not need to modify them.
+        ⚠️ DO NOT MODIFY — these instructions are required for the agent to work correctly. Editing may cause the agent to produce incorrect output.
       value: |
         1. Deep-scan this repo (all source files, dependencies, CI/CD pipelines, documentation) to understand its structure, technology stack, conventions, and patterns.
         2. Generate or update `.github/copilot-instructions.md` with the sections listed below.
