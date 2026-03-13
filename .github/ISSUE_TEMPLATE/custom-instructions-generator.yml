@@ -20,22 +20,25 @@ body:
       value: |
         1. Deep-scan this repo (all source files, dependencies, CI/CD pipelines, documentation) to understand its structure, technology stack, conventions, and patterns.
         2. Generate or update `.github/copilot-instructions.md` with the sections listed below.
-        3. Generate or update `.github/instructions/code-review.instructions.md` with the sections listed below.
-           CRITICAL: code-review.instructions.md MUST begin with this exact YAML frontmatter block (all three fields are REQUIRED):
+        3. Create `.github/instructions/code-review.instructions.md` using the TEMPLATE below as the starting point.
+           TEMPLATE (copy this exactly, then fill in the sections):
+           ```
            ---
-           description: "<repo-specific description — derive from the repo name, purpose, and tech stack>"
+           description: "REPLACE_WITH_REPO_SPECIFIC_DESCRIPTION"
            applyTo: "**"
            excludeAgent: "coding-agent"
            ---
-           - The excludeAgent field is the MOST IMPORTANT field. Without it, coding-agent will incorrectly use these review instructions. Never omit this field.
-           - The applyTo field scopes which files the instructions apply to. Use "**" for all files.
-           - The description field must be specific to THIS repository. Do not use generic text.
+           ```
+           a. Copy the TEMPLATE above as the first lines of code-review.instructions.md.
+           b. Replace REPLACE_WITH_REPO_SPECIFIC_DESCRIPTION with a real description derived from this repo's name, purpose, and tech stack.
+           c. Do NOT remove or modify the `applyTo` or `excludeAgent` lines — they must remain exactly as shown in the TEMPLATE.
+           d. After the closing `---`, add the code review sections listed below.
         4. VALIDATION CHECKLIST — before proceeding, verify ALL of the following:
            a. code-review.instructions.md starts with a YAML frontmatter block (opening and closing `---`).
-           b. The frontmatter contains `description:` with a repo-specific value.
-           c. The frontmatter contains `applyTo: "**"` exactly.
-           d. The frontmatter contains `excludeAgent: "coding-agent"` — open the file and confirm this line exists verbatim.
-           e. The frontmatter contains NO other fields (no alwaysApply — only description, applyTo, and excludeAgent).
+           b. The frontmatter contains `description:` with a repo-specific value (not the placeholder).
+           c. The frontmatter contains `applyTo: "**"` exactly as in the template.
+           d. The frontmatter contains `excludeAgent: "coding-agent"` exactly as in the template — open the file and confirm this line exists.
+           e. The frontmatter contains exactly three fields: description, applyTo, excludeAgent. No others.
            f. copilot-instructions.md covers all requested sections.
            If any check fails, fix it before continuing. Do NOT open a PR until all checks pass.
         5. Open a PR requesting the designated reviewer (if provided) or CODEOWNERS.
@@ -74,17 +77,8 @@ body:
     id: code-review-sections
     attributes:
       label: "Sections to include in code-review.instructions.md"
-      description: "Customize the sections below. The frontmatter requirement is in the Agent Instructions above."
+      description: "Customize the sections below. The agent will add the required frontmatter automatically from the template in Agent Instructions."
       value: |
-        REQUIRED: The file MUST begin with this exact YAML frontmatter (all three fields mandatory):
-        ---
-        description: "<repo-specific description derived from repo name, purpose, and tech stack>"
-        applyTo: "**"
-        excludeAgent: "coding-agent"
-        ---
-        DO NOT omit excludeAgent — it is the most critical field. It prevents coding-agent from using these review-only instructions.
-
-        Then include these sections:
         - Review Philosophy & Principles
         - Primary Review Priorities (ordered)
         - Language / Framework-Specific Guidance
