@@ -11,7 +11,7 @@ body:
         ## Custom Instructions Generator (Agent-Run)
         Submit this form and the assigned agent will scan the repo, generate instruction files, and open a PR.
 
-  - type: textarea
+  - type: markdown
     id: agent-instructions
     attributes:
       label: "Agent Instructions"
