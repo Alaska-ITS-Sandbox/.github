@@ -79,12 +79,11 @@ body:
       label: "Sections to include in code-review.instructions.md"
       description: "Customize the sections below. The agent will add the required frontmatter automatically from the template in Agent Instructions."
       value: |
-        - Review Philosophy & Principles
-        - Primary Review Priorities (ordered)
-        - Language / Framework-Specific Guidance
-        - What NOT to Flag (linter/formatter territory)
-        - Comment Style & Tone (prefix, length, confidence threshold)
-        - Example Comments (good and bad)
+        - Review Philosophy & Principles (when to comment, confidence threshold, what "high-confidence" means)
+        - Primary Review Priorities (ordered list: security, correctness, architecture, rule violations, test coverage)
+        - What NOT to Flag (linter/formatter territory, naming style, import order, whitespace, auto-generated files)
+        - Comment Style & Tone (severity prefixes [blocking]/[suggestion]/[info], comment length, definitive not hedging)
+        - Response Format (State the problem → why it matters → suggested fix)
     validations:
       required: true
 
